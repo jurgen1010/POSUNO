@@ -1,4 +1,5 @@
 ﻿using POSUNO.Helpers;
+using POSUNO.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,7 +36,31 @@ namespace POSUNO.Pages
             {
                 return;
             }
-            MessageDialog messageDialog = new MessageDialog("Vamos bien", "OK");
+
+            Response response = await ApiService.LoginAsync(new LoginRequest
+            {
+                Email = EmailTextBox.Text,
+                Password = PasswordPasswordBox.Password
+            }); 
+
+            MessageDialog messageDialog;
+            if (!response.IsSuccess)
+            {
+                messageDialog = new MessageDialog(response.Message, "Error");
+                await messageDialog.ShowAsync();
+                return;
+            }
+
+            //Casteamos el user de la respuesta para poderlo obtener
+            User user = (User)response.Result;
+            if (user == null)
+            {
+                messageDialog = new MessageDialog("Usuario o contraseña incorrectos", "Error");
+                await messageDialog.ShowAsync();
+                return;
+            }
+
+            messageDialog = new MessageDialog($"Bienvenido: {user.FullName}", "OK");
             await messageDialog.ShowAsync();
         }
 
@@ -57,9 +82,9 @@ namespace POSUNO.Pages
                 return false;
             }
 
-            if (string.IsNullOrEmpty(PasswordPasswordBox.Password))
+            if (PasswordPasswordBox.Password.Length < 6)
             {
-                messageDialog = new MessageDialog("Debes ingresar tu contraseña", "Error");
+                messageDialog = new MessageDialog("Debes ingresar tu contraseña de al menos (6) carácteres.", "Error");
                 await messageDialog.ShowAsync(); // Mostramos el mensaje de error en pantalla
                 return false;
             }

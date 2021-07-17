@@ -74,6 +74,7 @@ namespace POSUNO.Api.Controllers
             return NoContent();
         }
 
+
         [HttpPost]
         [Route("Login")]//ruteamos el metodo
         public async Task<ActionResult<User>> Login(LoginRequest model)
