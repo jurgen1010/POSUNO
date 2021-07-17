@@ -27,7 +27,7 @@ namespace POSUNO.Pages
         public LoginPage()
         {
             this.InitializeComponent();
-            EmailTextBox.Text = "jurgen10@yopmail.com";
+            EmailTextBox.Text = "jurgen@yopmail.com";
             PasswordPasswordBox.Password = "123456";
         }
 

@@ -19,6 +19,6 @@ namespace POSUNO.Models
         public string Password { get; set; }
 
         //Propiedad de e lectura
-        public string FullName => $"Bienvenido: {FirstName} {LastName}";
+        public string FullName => $"{FirstName} {LastName}";
     }
 }

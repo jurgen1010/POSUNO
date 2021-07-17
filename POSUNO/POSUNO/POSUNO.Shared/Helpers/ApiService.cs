@@ -10,6 +10,7 @@ namespace POSUNO.Helpers
 {
     class ApiService
     {
+
         public static async Task<Response> LoginAsync(LoginRequest model)
         {
             try
@@ -20,6 +21,9 @@ namespace POSUNO.Helpers
                 //Ponemos la notificacion UTF-8
                 StringContent content = new StringContent(request, Encoding.UTF8, "application/json");
                 
+                //Consumimos nuestro servicio publicado
+                string url = Settings.GetApiUrl();
+
                 //Manejamos la cola de comunicaciones
                 HttpClientHandler handler = new HttpClientHandler()
                 {
@@ -28,7 +32,7 @@ namespace POSUNO.Helpers
 
                 HttpClient client = new HttpClient(handler)
                 {
-                    BaseAddress = new Uri("https://localhost:44383/")
+                    BaseAddress = new Uri(url)
                 };
 
                 HttpResponseMessage response = await client.PostAsync("api/Account/Login", content);
