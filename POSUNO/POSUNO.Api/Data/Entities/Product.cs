@@ -22,7 +22,9 @@ namespace POSUNO.Api.Data.Entities
 
         public float Stock { get; set; }
 
+        public bool IsActive { get; set; }
         //Un producto pertenece a un usuario y usuario puede tener muchos productos (1 a muchos)
+        [Required]
         public User User { get; set; }
     }
 }
