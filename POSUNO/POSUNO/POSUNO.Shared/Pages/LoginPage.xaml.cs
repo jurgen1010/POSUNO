@@ -1,4 +1,5 @@
-﻿using POSUNO.Helpers;
+﻿using POSUNO.Components;
+using POSUNO.Helpers;
 using POSUNO.Models;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace POSUNO.Pages
 {
@@ -27,6 +27,8 @@ namespace POSUNO.Pages
         public LoginPage()
         {
             this.InitializeComponent();
+            EmailTextBox.Text = "jurgen10@yopmail.com";
+            PasswordPasswordBox.Password = "123456";
         }
 
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
@@ -37,11 +39,14 @@ namespace POSUNO.Pages
                 return;
             }
 
+            Loader loader = new Loader("Por favor espere...");
+            loader.Show();
             Response response = await ApiService.LoginAsync(new LoginRequest
             {
                 Email = EmailTextBox.Text,
                 Password = PasswordPasswordBox.Password
-            }); 
+            });
+            loader.Close();
 
             MessageDialog messageDialog;
             if (!response.IsSuccess)
@@ -60,8 +65,9 @@ namespace POSUNO.Pages
                 return;
             }
 
-            messageDialog = new MessageDialog($"Bienvenido: {user.FullName}", "OK");
-            await messageDialog.ShowAsync();
+            //Redireccionar a otra pagina y estamos pasandole el usuario
+            Frame.Navigate(typeof(MainPage), user);
+            
         }
 
         private async Task<bool> ValidForm()
