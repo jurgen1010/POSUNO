@@ -65,5 +65,55 @@ namespace POSUNO.Helpers
                 };
             }
         }
+
+        //Traer una lista de cualquier tipo
+        public static async Task<Response> GestListAsync<T>(string controller) 
+        {
+            try
+            {
+                HttpClientHandler handler = new HttpClientHandler()
+                {
+                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                };
+
+                string url = Settings.GetApiUrl();
+
+                HttpClient client = new HttpClient(handler)
+                {
+                    BaseAddress = new Uri(url)
+                };
+
+                HttpResponseMessage response = await client.GetAsync($"api/{controller}");
+
+                //Leemos el resultado
+                string result = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = result,
+                    };
+                }
+
+                //Deserializamos , T es cualquier cosa
+                List<T> list = JsonConvert.DeserializeObject<List<T>>(result);
+                return new Response
+                {
+                    IsSuccess = true,
+                    Result = list,
+                };
+            }
+            catch (Exception ex)
+            {
+
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }  
+        }
+
     }
 }

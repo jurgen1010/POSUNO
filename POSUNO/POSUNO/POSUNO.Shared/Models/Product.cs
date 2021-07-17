@@ -16,8 +16,11 @@ namespace POSUNO.Models
         public string Description { get; set; }
 
         public decimal Price { get; set; }
+        //Propiedad de lectura para darle formato al precio
+        public string PriceString => $"{Price:C2}";
 
         public float Stock { get; set; }
+        public string StockString => $"{Stock:N2}"; //Separador de miles
 
         public bool IsActive { get; set; }
         //Un producto pertenece a un usuario y usuario puede tener muchos productos (1 a muchos)
